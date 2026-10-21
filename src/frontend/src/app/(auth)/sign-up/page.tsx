@@ -21,7 +21,7 @@ export default function SignUpPage() {
       name: String(form.get("name")),
       email: String(form.get("email")),
       password: String(form.get("password")),
-      callbackURL: "/dashboard",
+      callbackURL: "/",
     });
 
     setSubmitting(false);
@@ -31,12 +31,13 @@ export default function SignUpPage() {
       return;
     }
 
-    router.push("/dashboard");
+    router.push("/");
     router.refresh();
   }
 
   return (
-    <section className="auth-card">
+    <main className="auth-shell">
+      <section className="auth-card">
       <p className="eyebrow">Join TechBondhu</p>
       <h1>Create account</h1>
       <form className="auth-form" onSubmit={handleSubmit}>
@@ -66,7 +67,8 @@ export default function SignUpPage() {
       <p className="form-help">
         Already registered? <Link href="/sign-in">Sign in</Link>
       </p>
-    </section>
+      </section>
+    </main>
   );
 }
 

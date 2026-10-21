@@ -1,0 +1,579 @@
+/* ==========================================================================
+   TECHMARKT (R) — FEATURED TECH SHOWCASE
+   Modern, ultra-smooth responsive carousel with schematic technical aesthetic.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Design Tokens & CSS Variables
+   -------------------------------------------------------------------------- */
+:root {
+  --bg-color: #f7f7f8;
+  --bg-surface: #ffffff;
+  --text-primary: #121212;
+  --text-secondary: #6e6e73;
+  --text-muted: #8e8e93;
+  --border-light: rgba(0, 0, 0, 0.08);
+  --border-grid: rgba(0, 0, 0, 0.16);
+
+  --font-display: 'Doto', monospace;
+  --font-ui: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Tighter carousel metrics matching reference screenshot */
+  --card-width: 220px;
+  --card-gap: 8px;
+  --stage-height: 480px;
+
+  /* Animation Easing Curves */
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --anim-duration: 0.65s;
+}
+
+@media (min-width: 1440px) {
+  :root {
+    --card-width: 240px;
+    --card-gap: 10px;
+    --stage-height: 510px;
+  }
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --card-width: 190px;
+    --card-gap: 6px;
+    --stage-height: 440px;
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --card-width: 165px;
+    --card-gap: 4px;
+    --stage-height: 410px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Reset & Base Styles (Centered Viewport)
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+  overflow: hidden;
+  position: relative;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* --------------------------------------------------------------------------
+   Schematic Grid Background
+   -------------------------------------------------------------------------- */
+.tech-grid-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    /* Crosshairs grid */
+    url("data:image/svg+xml,%3Csvg width='160' height='160' viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M80 74v12M74 80h12' stroke='rgba(0,0,0,0.14)' stroke-width='1.2' stroke-linecap='square'/%3E%3Ccircle cx='80' cy='80' r='0.9' fill='rgba(0,0,0,0.22)'/%3E%3C/svg%3E"),
+    /* Secondary micro dots */
+    radial-gradient(circle, rgba(0, 0, 0, 0.18) 1px, transparent 1px);
+  background-size: 160px 160px, 80px 80px;
+  background-position: center center;
+  opacity: 0.9;
+}
+
+/* --------------------------------------------------------------------------
+   Top Floating Navigation Pill
+   -------------------------------------------------------------------------- */
+.navbar-wrapper {
+  position: fixed;
+  top: 24px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 100;
+  padding: 0 20px;
+  pointer-events: none;
+}
+
+.nav-pill {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 36px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: 9999px;
+  padding: 8px 20px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.nav-pill:hover {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.07);
+}
+
+.nav-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 50%;
+  color: var(--text-primary);
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.nav-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.nav-btn:active {
+  transform: scale(0.92);
+}
+
+/* Two-bar hamburger icon matching screenshot */
+.menu-btn {
+  flex-direction: column;
+  gap: 3.5px;
+  width: 28px;
+  height: 28px;
+}
+
+.bar-line {
+  display: block;
+  width: 13px;
+  height: 1.6px;
+  background-color: var(--text-primary);
+  border-radius: 1px;
+}
+
+/* Brand Link */
+.brand-link {
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+.brand-title {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2.2px;
+  text-transform: uppercase;
+}
+
+/* Bag Icon */
+.bag-btn {
+  width: 28px;
+  height: 28px;
+}
+
+.bag-icon {
+  width: 17px;
+  height: 17px;
+}
+
+/* --------------------------------------------------------------------------
+   Hero Container & Headline (Dead Centered on Screen)
+   -------------------------------------------------------------------------- */
+.hero-container {
+  width: 100%;
+  max-width: 1600px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 10;
+  padding: 0 20px;
+}
+
+.hero-header {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+/* Dot-matrix style headline matching screenshot */
+.featured-heading {
+  font-family: var(--font-display);
+  font-variation-settings: 'ROND' 0, 'wght' 800;
+  font-weight: 800;
+  font-size: clamp(32px, 3.8vw, 46px);
+  letter-spacing: 6px;
+  color: #161616;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+/* --------------------------------------------------------------------------
+   Carousel Container
+   -------------------------------------------------------------------------- */
+.carousel-container {
+  position: relative;
+  width: 100%;
+  height: var(--stage-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+/* Navigation Chevrons - snugged beside outermost items */
+.arrow-btn {
+  position: absolute;
+  top: 48%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 50;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #88888e;
+  transition: color 0.25s ease, transform 0.25s ease;
+  border-radius: 50%;
+}
+
+.arrow-btn svg {
+  width: 26px;
+  height: 26px;
+}
+
+.arrow-btn:hover {
+  color: #111111;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.arrow-prev {
+  left: max(20px, calc(50% - (var(--card-width) + var(--card-gap)) * 2.5 - 32px));
+}
+
+.arrow-prev:hover {
+  transform: translateY(-50%) translateX(-3px);
+}
+
+.arrow-next {
+  right: max(20px, calc(50% - (var(--card-width) + var(--card-gap)) * 2.5 - 32px));
+}
+
+.arrow-next:hover {
+  transform: translateY(-50%) translateX(3px);
+}
+
+.arrow-btn:active {
+  transform: translateY(-50%) scale(0.92);
+}
+
+/* --------------------------------------------------------------------------
+   Precision Center Reticle Frame (Top, Bottom, Left, Right Crosshairs)
+   -------------------------------------------------------------------------- */
+.center-reticle-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 25;
+}
+
+.reticle-plus {
+  position: absolute;
+  font-family: var(--font-ui);
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.26);
+  user-select: none;
+  transition: opacity 0.3s ease;
+}
+
+/* Top crosshair directly above center product */
+.reticle-top {
+  top: calc(50% - 225px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Bottom crosshair between center product base and product title */
+.reticle-bottom {
+  top: calc(50% + 140px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Left crosshair between center product and left product */
+.reticle-left {
+  top: calc(50% - 15px);
+  left: calc(50% - (var(--card-width) + var(--card-gap)) * 0.58);
+  transform: translateY(-50%) translateX(-50%);
+}
+
+/* Right crosshair between center product and right product */
+.reticle-right {
+  top: calc(50% - 15px);
+  left: calc(50% + (var(--card-width) + var(--card-gap)) * 0.58);
+  transform: translateY(-50%) translateX(-50%);
+}
+
+/* --------------------------------------------------------------------------
+   Carousel Viewport & Track
+   -------------------------------------------------------------------------- */
+.carousel-viewport {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: grab;
+}
+
+.carousel-viewport.is-dragging {
+  cursor: grabbing;
+}
+
+.carousel-track {
+  display: flex;
+  align-items: flex-end;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto 0;
+  height: 420px;
+  will-change: transform;
+  transition: transform var(--anim-duration) var(--ease-spring);
+}
+
+/* --------------------------------------------------------------------------
+   Product Cards
+   -------------------------------------------------------------------------- */
+.carousel-card {
+  flex-shrink: 0;
+  width: var(--card-width);
+  margin-right: var(--card-gap);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+  cursor: pointer;
+  transform-origin: bottom center;
+  transition:
+    transform var(--anim-duration) var(--ease-spring),
+    opacity var(--anim-duration) ease,
+    filter var(--anim-duration) ease;
+  will-change: transform, opacity;
+}
+
+/* Visual Product Image Area */
+.card-visual {
+  width: 100%;
+  height: 290px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+}
+
+.product-img-wrap {
+  width: 100%;
+  height: 270px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: relative;
+}
+
+.product-img {
+  max-width: 95%;
+  max-height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.04));
+  transition: transform 0.3s ease;
+}
+
+/* Ground Contact Shadow */
+.product-shadow {
+  width: 80%;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.22) 0%, rgba(0, 0, 0, 0.07) 50%, transparent 75%);
+  margin-top: 4px;
+  filter: blur(3.5px);
+  transform: scaleY(0.7);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Product Info (Name & Price) */
+.card-info {
+  margin-top: 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.product-name {
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.product-price {
+  font-family: var(--font-ui);
+  font-size: 13.5px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-top: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   Slot States & Scaling Transitions
+   -------------------------------------------------------------------------- */
+
+/* --------------------------------------------------------------------------
+   Product Specific Tuning (Custom Gaming PC stature)
+   -------------------------------------------------------------------------- */
+.carousel-card[data-prod-id="pc"] .product-img-wrap {
+  overflow: visible;
+}
+
+.carousel-card[data-prod-id="pc"] .product-img {
+  max-width: 135%;
+  max-height: 115%;
+  transform: scale(0.9);
+  transform-origin: bottom center;
+}
+
+.carousel-card[data-prod-id="pc"] .product-shadow {
+  width: 95%;
+  transform: scaleY(0.85);
+}
+
+/* Center Active Card (Slot 0) */
+.carousel-card.is-center {
+  transform: scale(1.44);
+  z-index: 20;
+  opacity: 1;
+  cursor: default;
+}
+
+.carousel-card[data-prod-id="pc"].is-center {
+  transform: scale(1.48);
+}
+
+.carousel-card.is-center .product-name {
+  font-weight: 600;
+  font-size: 14.5px;
+  color: #000000;
+}
+
+.carousel-card.is-center .product-price {
+  font-weight: 500;
+  color: #4f4f52;
+}
+
+.carousel-card.is-center .product-shadow {
+  width: 86%;
+  height: 16px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.28) 0%, rgba(0, 0, 0, 0.08) 55%, transparent 75%);
+  filter: blur(4px);
+}
+
+.carousel-card[data-prod-id="pc"].is-center .product-shadow {
+  width: 100%;
+  height: 18px;
+  filter: blur(4.5px);
+}
+
+/* Near Cards (Slot -1 and +1: e.g. PS5 and Headphones when PC is center) */
+.carousel-card.is-near {
+  transform: scale(0.92);
+  z-index: 10;
+  opacity: 0.94;
+}
+
+.carousel-card.is-near:hover {
+  transform: scale(0.96) translateY(-4px);
+  opacity: 1;
+}
+
+/* Far Cards (Slot -2 and +2: e.g. Switch and Xbox when PC is center) */
+.carousel-card.is-far {
+  transform: scale(0.78);
+  z-index: 5;
+  opacity: 0.86;
+}
+
+.carousel-card.is-far:hover {
+  transform: scale(0.82) translateY(-4px);
+  opacity: 1;
+}
+
+/* Out of View Cards */
+.carousel-card.is-hidden {
+  transform: scale(0.65);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Responsive adjustments for mobile / tablet */
+@media (max-width: 768px) {
+  .carousel-card.is-center {
+    transform: scale(1.22);
+  }
+
+  .carousel-card.is-near {
+    transform: scale(0.85);
+  }
+
+  .carousel-card.is-far {
+    transform: scale(0.7);
+    opacity: 0.6;
+  }
+}

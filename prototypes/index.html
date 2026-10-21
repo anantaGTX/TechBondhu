@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TECHMARKT (R) — Featured Tech</title>
+  <meta name="description" content="Discover cutting-edge gaming hardware and electronics at Techmarkt. Interactive 3D featured tech showcase.">
+  
+  <!-- Google Fonts: Doto for square-pixel dot-matrix header, Space Grotesk for technical typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Doto:wght,ROND@800,0&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient Schematic Grid Background with subtle dots and crosshairs -->
+  <div class="tech-grid-bg" aria-hidden="true"></div>
+
+  <!-- Top Floating Capsule Navigation -->
+  <header class="navbar-wrapper">
+    <nav class="nav-pill" aria-label="Primary Navigation">
+      <button class="nav-btn menu-btn" aria-label="Toggle navigation menu" id="menuToggle">
+        <span class="bar-line"></span>
+        <span class="bar-line"></span>
+      </button>
+
+      <a href="#" class="brand-link" aria-label="TECHMARKT Home">
+        <span class="brand-title">TECHMARKT (R)</span>
+      </a>
+
+      <button class="nav-btn bag-btn" aria-label="Shopping bag" id="cartToggle">
+        <svg class="bag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 3h12l2 4v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7l2-4z"></path>
+          <path d="M3 7h18"></path>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Main Hero Section -->
+  <main class="hero-container">
+    <header class="hero-header">
+      <h1 class="featured-heading">FEATURED TECH</h1>
+    </header>
+
+    <!-- Interactive Showcase Carousel -->
+    <section class="carousel-container" aria-label="Featured Products Carousel" id="carouselRegion">
+      <!-- Navigation Arrows -->
+      <button class="arrow-btn arrow-prev" id="prevBtn" aria-label="Previous item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 19 8 12 15 5"></polyline>
+        </svg>
+      </button>
+
+      <button class="arrow-btn arrow-next" id="nextBtn" aria-label="Next item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 5 16 12 9 19"></polyline>
+        </svg>
+      </button>
+
+      <!-- Precision Framing Reticle (Top, Bottom, Left, Right Crosshairs framing the center slot) -->
+      <div class="center-reticle-frame" aria-hidden="true">
+        <span class="reticle-plus reticle-top">+</span>
+        <span class="reticle-plus reticle-bottom">+</span>
+        <span class="reticle-plus reticle-left">+</span>
+        <span class="reticle-plus reticle-right">+</span>
+      </div>
+
+      <!-- Carousel Viewport & Continuous Track -->
+      <div class="carousel-viewport" id="carouselViewport">
+        <div class="carousel-track" id="carouselTrack">
+          <!-- Cards populated by JavaScript -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

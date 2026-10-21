@@ -1,0 +1,139 @@
+:root {
+  color-scheme: dark;
+  --background: #08111f;
+  --surface: #101c2e;
+  --text: #edf4ff;
+  --muted: #a5b4c8;
+  --accent: #46d9b0;
+  --border: #263852;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--background);
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 85% 10%, #18345b 0, transparent 30rem),
+    var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.shell {
+  width: min(72rem, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 8rem 0;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+h1 {
+  max-width: 14ch;
+  margin: 0.5rem 0 1.25rem;
+  font-size: clamp(2.75rem, 8vw, 6rem);
+  line-height: 0.95;
+}
+
+.intro {
+  max-width: 42rem;
+  color: var(--muted);
+  font-size: 1.15rem;
+  line-height: 1.7;
+}
+
+.status {
+  display: inline-block;
+  margin-top: 2rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--surface);
+}
+
+.home-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.home-actions a,
+button {
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.7rem;
+  color: var(--text);
+  background: var(--surface);
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.auth-shell {
+  display: grid;
+  min-height: 100vh;
+  padding: 1rem;
+  place-items: center;
+}
+
+.auth-card {
+  width: min(100%, 30rem);
+  padding: 2rem;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--surface);
+}
+
+.auth-card h1 {
+  font-size: 2.5rem;
+}
+
+.auth-form,
+.auth-form label {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.auth-form {
+  gap: 1rem;
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  color: var(--text);
+  background: var(--background);
+  font: inherit;
+}
+
+.form-error {
+  color: #ff9a9a;
+}
+
+.form-help {
+  color: var(--muted);
+}
+
+.form-help a {
+  color: var(--accent);
+}
+

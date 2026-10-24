@@ -287,6 +287,7 @@
 
 .productCard {
   --scale: 0.76;
+  --x-offset: 0px;
   position: absolute;
   bottom: 2rem;
   left: 50%;
@@ -301,20 +302,69 @@
   color: var(--landing-text);
   background: transparent;
   opacity: 0.72;
-  transform: translateX(-50%) scale(var(--scale));
+  transform: translateX(calc(-50% + var(--x-offset))) scale(var(--scale));
   transform-origin: bottom center;
-  transition: left 650ms cubic-bezier(0.22, 1, 0.36, 1), transform 650ms cubic-bezier(0.22, 1, 0.36, 1), opacity 500ms ease;
+  will-change: transform, opacity;
+  transition:
+    transform 650ms cubic-bezier(0.25, 1, 0.5, 1),
+    opacity 500ms ease;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
-.slotNegativeTwo { left: calc(50% - var(--card-pitch) - var(--card-pitch)); }
-.slotNegativeOne { left: calc(50% - var(--card-pitch)); }
-.slotCenter { left: 50%; }
-.slotPositiveOne { left: calc(50% + var(--card-pitch)); }
-.slotPositiveTwo { left: calc(50% + var(--card-pitch) + var(--card-pitch)); }
+.slotNegativeTwo {
+  --x-offset: calc(var(--card-pitch) * -2);
+  z-index: 5;
+}
 
-.productCard:hover { --scale: 0.82; opacity: 1; }
-.activeCard { --scale: 1.28; z-index: 20; opacity: 1; cursor: default; }
-.activeCard:hover { --scale: 1.28; }
+.slotNegativeOne {
+  --x-offset: calc(var(--card-pitch) * -1);
+  z-index: 10;
+}
+
+.slotCenter {
+  --x-offset: 0px;
+  z-index: 25;
+}
+
+.slotPositiveOne {
+  --x-offset: var(--card-pitch);
+  z-index: 10;
+}
+
+.slotPositiveTwo {
+  --x-offset: calc(var(--card-pitch) * 2);
+  z-index: 5;
+}
+
+.slotHiddenLeft {
+  --x-offset: calc(var(--card-pitch) * -2.8);
+  opacity: 0 !important;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.slotHiddenRight {
+  --x-offset: calc(var(--card-pitch) * 2.8);
+  opacity: 0 !important;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.productCard:hover:not(.activeCard) {
+  --scale: 0.82;
+  opacity: 1;
+}
+
+.activeCard {
+  --scale: 1.28;
+  opacity: 1;
+  cursor: default;
+}
+
+.activeCard:hover {
+  --scale: 1.28;
+}
 
 .productVisual {
   display: flex;
@@ -472,7 +522,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .productCard { transition-duration: 0.01ms; }
   .authLoading { animation: none; }
 }
 

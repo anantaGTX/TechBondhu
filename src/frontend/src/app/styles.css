@@ -70,7 +70,7 @@ h1 {
 }
 
 .home-actions a,
-button {
+.home-actions button {
   padding: 0.8rem 1rem;
   border: 1px solid var(--border);
   border-radius: 0.7rem;

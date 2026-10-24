@@ -81,21 +81,21 @@ const productGroups = [
 
 function getSlot(index: number, activeIndex: number) {
   const count = products.length;
-  let slot = index - activeIndex;
-
-  if (slot > Math.floor(count / 2)) slot -= count;
-  if (slot < -Math.floor(count / 2)) slot += count;
-
-  return slot;
+  // Calculate shortest circular distance
+  let diff = (index - (activeIndex % count) + count) % count;
+  if (diff > count / 2) {
+    diff -= count;
+  }
+  return diff;
 }
 
-const slotClasses = {
+const slotClasses: Record<string, string> = {
   "-2": styles.slotNegativeTwo,
   "-1": styles.slotNegativeOne,
   "0": styles.slotCenter,
   "1": styles.slotPositiveOne,
   "2": styles.slotPositiveTwo,
-} as const;
+};
 
 function ArrowIcon({ direction }: { direction: "left" | "right" }) {
   const points = direction === "left" ? "15 19 8 12 15 5" : "9 5 16 12 9 19";

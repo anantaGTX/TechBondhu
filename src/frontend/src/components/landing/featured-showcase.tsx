@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+
+import { signOut, useSession } from "@/lib/auth-client";
 
 import styles from "./featured-showcase.module.css";
 
@@ -159,7 +162,10 @@ function ChevronIcon() {
 }
 
 export function FeaturedShowcase() {
+  const router = useRouter();
+  const { data: session, isPending: sessionPending } = useSession();
   const [activeIndex, setActiveIndex] = useState(2);
+  const [signingOut, setSigningOut] = useState(false);
   const pointerStart = useRef<number | null>(null);
 
   const move = (direction: -1 | 1) => {
@@ -179,6 +185,14 @@ export function FeaturedShowcase() {
   }, []);
 
   const activeProduct = products[activeIndex];
+  const accountName = session?.user.name?.trim().split(/\s+/)[0] || "Account";
+
+  async function handleSignOut() {
+    setSigningOut(true);
+    await signOut();
+    setSigningOut(false);
+    router.refresh();
+  }
 
   return (
     <main className={styles.page}>
@@ -231,11 +245,29 @@ export function FeaturedShowcase() {
               <LocationIcon />
               <span>Dhaka</span>
             </button>
-            <Link className={styles.signInButton} href="/sign-in">
-              <AccountIcon />
-              <span>Sign in</span>
-            </Link>
-            <Link className={styles.joinButton} href="/sign-up">Create account</Link>
+            {sessionPending ? (
+              <span className={styles.authLoading} aria-label="Checking sign-in status" />
+            ) : session?.user ? (
+              <div className={styles.accountActions}>
+                <span className={styles.accountIdentity} title={session.user.email}>
+                  <AccountIcon />
+                  <span>{accountName}</span>
+                </span>
+                <button
+                  className={styles.signOutButton}
+                  type="button"
+                  disabled={signingOut}
+                  onClick={handleSignOut}
+                >
+                  {signingOut ? "Signing out…" : "Sign out"}
+                </button>
+              </div>
+            ) : (
+              <Link className={styles.signInButton} href="/sign-in">
+                <AccountIcon />
+                <span>Sign in</span>
+              </Link>
+            )}
           </div>
         </nav>
       </header>
@@ -326,8 +358,8 @@ export function FeaturedShowcase() {
 
         <div className={styles.heroActions} aria-live="polite">
           <span className={styles.currentProduct}>{activeProduct.name}</span>
-          <Link className={styles.primaryAction} href="/sign-up">
-            Save &amp; compare
+          <Link className={styles.primaryAction} href={session?.user ? "#featured" : "/sign-in"}>
+            {session?.user ? "Save & compare" : "Sign in to save"}
           </Link>
           <a className={styles.secondaryAction} href="#why-techbondhu">
             How it works

@@ -201,7 +201,8 @@
 .locationButton svg { width: 1rem; fill: none; stroke: currentColor; stroke-width: 1.65; }
 
 .signInButton,
-.joinButton {
+.accountIdentity,
+.signOutButton {
   display: inline-flex;
   min-height: 2.65rem;
   padding: 0 1rem;
@@ -219,21 +220,20 @@
   color: var(--landing-text);
 }
 
-.signInButton svg { width: 1rem; fill: none; stroke: currentColor; stroke-width: 1.7; }
+.signInButton svg,
+.accountIdentity svg { width: 1rem; fill: none; stroke: currentColor; stroke-width: 1.7; }
 
 .signInButton:hover {
   background: rgba(0, 0, 0, 0.055);
 }
 
-.joinButton {
-  color: white;
-  background: #161616;
-  box-shadow: 0 0.35rem 0.9rem rgba(0, 0, 0, 0.12);
-}
-
-.joinButton:hover {
-  background: #333333;
-}
+.accountActions { display: flex; align-items: center; gap: 0.25rem; }
+.accountIdentity { max-width: 8.5rem; gap: 0.42rem; padding-inline: 0.82rem; color: var(--landing-text); background: rgba(0, 0, 0, 0.045); }
+.accountIdentity span { overflow: hidden; text-overflow: ellipsis; }
+.signOutButton { padding-inline: 0.82rem; border: 0; color: #5f6065; background: transparent; }
+.signOutButton:hover:not(:disabled) { color: var(--landing-text); background: rgba(0, 0, 0, 0.055); }
+.signOutButton:disabled { cursor: wait; opacity: .55; }
+.authLoading { width: 6.4rem; height: 2.65rem; border-radius: 999px; background: rgba(0, 0, 0, 0.055); animation: authPulse 1.2s ease-in-out infinite; }
 
 .hero {
   display: flex;
@@ -455,10 +455,13 @@
   .productsTrigger svg { display: none; }
   .megaMenu { display: none; }
   .navActions { grid-column: 2; grid-row: 1; }
-  .joinButton,
   .locationButton { display: none; }
   .signInButton { width: 2.25rem; padding: 0; }
   .signInButton span { display: none; }
+  .accountIdentity { width: 2.25rem; padding: 0; }
+  .accountIdentity span { display: none; }
+  .signOutButton { min-height: 2.25rem; padding-inline: .55rem; font-size: .7rem; }
+  .authLoading { width: 2.25rem; height: 2.25rem; }
   .builderButton { height: 2.55rem; padding: 0 0.7rem; gap: 0.4rem; font-size: 0.7rem; }
   .builderArrow { display: none; }
 }
@@ -470,4 +473,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .productCard { transition-duration: 0.01ms; }
+  .authLoading { animation: none; }
 }
+
+@keyframes authPulse { 50% { opacity: .45; } }

@@ -5,5 +5,12 @@ export const authClient = createAuthClient({
   plugins: [jwtClient()],
 });
 
-export const { signIn, signOut, signUp, useSession } = authClient;
+export const {
+  requestPasswordReset,
+  resetPassword,
+  signIn,
+  signOut,
+  signUp,
+  useSession,
+} = authClient;
 

@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FaGithub } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 import { FiAlertCircle, FiCheck, FiEye, FiEyeOff, FiLoader } from "react-icons/fi";
 
 import { signIn } from "@/lib/auth-client";
@@ -12,6 +14,7 @@ import styles from "./sign-in.module.css";
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type SignInStatus = "idle" | "submitting" | "success" | "error";
+type SocialProvider = "google" | "github";
 
 const buildMessages = [
   "Your build starts here",
@@ -26,6 +29,19 @@ function FieldMessage({ id, children }: { id: string; children: string }) {
   return <p className={styles.fieldMessage} id={id}>{children}</p>;
 }
 
+function readableSignInError(error: { code?: string; message?: string }) {
+  switch (error.code) {
+    case "EMAIL_NOT_VERIFIED":
+      return "Verify your email address before signing in.";
+    case "TOO_MANY_REQUESTS":
+      return "Too many attempts. Wait a moment, then try again.";
+    case "INVALID_EMAIL_OR_PASSWORD":
+      return "The email or password does not match the account you created. Passwords are case-sensitive.";
+    default:
+      return error.message || "Sign-in is unavailable right now. Please try again.";
+  }
+}
+
 export default function SignInPage() {
   const router = useRouter();
   const redirectTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -38,8 +54,10 @@ export default function SignInPage() {
   const [status, setStatus] = useState<SignInStatus>("idle");
   const [authError, setAuthError] = useState<string | null>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [socialSubmitting, setSocialSubmitting] = useState<SocialProvider | null>(null);
 
-  const emailValid = EMAIL_PATTERN.test(email);
+  const normalizedEmail = email.trim().toLowerCase();
+  const emailValid = EMAIL_PATTERN.test(normalizedEmail);
   const passwordValid = password.length >= 8;
 
   const stage = useMemo(() => {
@@ -84,10 +102,20 @@ export default function SignInPage() {
     setStatus("submitting");
 
     try {
-      const result = await signIn.email({ email, password, rememberMe: remember });
+      const result = await signIn.email({
+        email: normalizedEmail,
+        password,
+        rememberMe: remember,
+      });
 
       if (result.error) {
-        setAuthError("Check your email and password, then try again.");
+        if (process.env.NODE_ENV === "development") {
+          console.error("Better Auth sign-in rejected", {
+            code: result.error.code,
+            message: result.error.message,
+          });
+        }
+        setAuthError(readableSignInError(result.error));
         setStatus("error");
         return;
       }
@@ -100,6 +128,37 @@ export default function SignInPage() {
     } catch {
       setAuthError("Sign-in is unavailable right now. Please try again.");
       setStatus("error");
+    }
+  }
+
+  async function handleSocialSignIn(provider: SocialProvider) {
+    setAuthError(null);
+    setSocialSubmitting(provider);
+    setStatus("submitting");
+
+    try {
+      const result = await signIn.social({
+        provider,
+        callbackURL: "/",
+      });
+
+      if (result.error) {
+        if (process.env.NODE_ENV === "development") {
+          console.error(`Better Auth ${provider} sign-in rejected`, {
+            code: result.error.code,
+            message: result.error.message,
+          });
+        }
+        const providerName = provider === "google" ? "Google" : "GitHub";
+        setAuthError(`${providerName} sign-in is unavailable. Check the OAuth configuration and try again.`);
+        setStatus("error");
+        setSocialSubmitting(null);
+      }
+    } catch {
+      const providerName = provider === "google" ? "Google" : "GitHub";
+      setAuthError(`${providerName} sign-in is unavailable right now. Please try again.`);
+      setStatus("error");
+      setSocialSubmitting(null);
     }
   }
 
@@ -192,7 +251,10 @@ export default function SignInPage() {
                   aria-describedby={emailError ? "email-error" : undefined}
                   onChange={(event) => setEmail(event.target.value)}
                   onFocus={() => setFocused("email")}
-                  onBlur={() => setFocused(null)}
+                  onBlur={() => {
+                    setFocused(null);
+                    setEmail(normalizedEmail);
+                  }}
                 />
                 {emailValid ? <FiCheck className={styles.validMark} aria-label="Valid email" /> : null}
               </div>
@@ -241,9 +303,9 @@ export default function SignInPage() {
                 <span className={styles.customCheck}><FiCheck /></span>
                 Keep me signed in
               </label>
-              <button className={styles.forgotButton} type="button" disabled title="Password reset is coming soon">
+              <Link className={styles.forgotButton} href="/forgot-password">
                 Forgot password?
-              </button>
+              </Link>
             </div>
 
             <button
@@ -254,6 +316,31 @@ export default function SignInPage() {
               {status === "submitting" ? <><FiLoader /> Signing in...</> : status === "success" ? <><FiCheck /> Signed in</> : "Sign in"}
             </button>
           </form>
+
+          <div className={styles.formDivider}><span>or continue with</span></div>
+
+          <div className={styles.socialButtons} aria-label="Social sign in options">
+            <button
+              className={`${styles.socialButton} ${socialSubmitting === "google" ? styles.socialButtonLoading : ""}`}
+              type="button"
+              disabled={formLocked}
+              onClick={() => handleSocialSignIn("google")}
+              aria-busy={socialSubmitting === "google"}
+            >
+              {socialSubmitting === "google" ? <FiLoader /> : <FcGoogle />}
+              {socialSubmitting === "google" ? "Connecting..." : "Continue with Google"}
+            </button>
+            <button
+              className={`${styles.socialButton} ${socialSubmitting === "github" ? styles.socialButtonLoading : ""}`}
+              type="button"
+              disabled={formLocked}
+              onClick={() => handleSocialSignIn("github")}
+              aria-busy={socialSubmitting === "github"}
+            >
+              {socialSubmitting === "github" ? <FiLoader /> : <FaGithub />}
+              {socialSubmitting === "github" ? "Connecting..." : "Continue with GitHub"}
+            </button>
+          </div>
 
           <p className={styles.signUpCopy}>
             New to TechBondhu? <Link href="/sign-up">Create an account</Link>

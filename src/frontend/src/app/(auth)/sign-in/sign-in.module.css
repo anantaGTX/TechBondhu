@@ -165,6 +165,58 @@
   line-height: 1.6;
 }
 
+.socialButtons {
+  width: min(100%, 430px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.socialButton {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 0 15px;
+  border: 1px solid #747775;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  color: #1f1f1f;
+  background: var(--white);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 20px;
+  white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(17, 18, 20, .05);
+  transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+.socialButton:hover:not(:disabled) {
+  border-color: #4f5154;
+  background: #f8f9fa;
+  box-shadow: 0 2px 7px rgba(17, 18, 20, .1);
+  transform: translateY(-1px);
+}
+.socialButton:active:not(:disabled) { box-shadow: none; transform: translateY(0); }
+.socialButton:focus-visible { outline: 3px solid rgba(23, 105, 224, .18); outline-offset: 3px; }
+.socialButton:disabled { cursor: wait; opacity: .72; }
+.socialButton svg { flex: 0 0 auto; width: 18px; height: 18px; }
+.socialButtonLoading svg { animation: spin 1s linear infinite; }
+
+.formDivider {
+  margin: 24px 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  color: var(--quiet);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.formDivider::before, .formDivider::after { content: ""; height: 1px; flex: 1; background: var(--line); }
+
 .fieldGroup { margin-top: 21px; }
 .fieldGroup label { font-size: 13px; font-weight: 600; }
 .inputFrame {
@@ -196,8 +248,7 @@
 .inputFrame input:disabled { opacity: .7; }
 .validMark { flex: 0 0 auto; color: #26875d; }
 
-.revealButton,
-.forgotButton {
+.revealButton {
   border: 0;
   background: transparent;
 }
@@ -250,7 +301,8 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-.forgotButton:disabled { cursor: not-allowed; opacity: .58; }
+.forgotButton:hover { color: #0f55bd; }
+.forgotButton:focus-visible { outline: 3px solid rgba(23, 105, 224, .18); outline-offset: 3px; border-radius: 2px; }
 
 .signInButton {
   width: 100%;
@@ -345,6 +397,7 @@
   .pcStage { min-height: 225px; }
   .buildCaption small { display: none; }
   .formPanel { padding-top: 40px; }
+  .socialButtons { max-width: 230px; grid-template-columns: 1fr; }
   .formHeader { margin-bottom: 30px; }
   .formHeader h1 { font-size: 36px; }
   .formHeader > span { font-size: 14px; }

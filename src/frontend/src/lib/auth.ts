@@ -4,9 +4,15 @@ import { jwt } from "better-auth/plugins";
 import { PostgresDialect } from "kysely";
 import { Pool } from "pg";
 
+import { sendPasswordResetEmail } from "@/lib/email";
+
 const databaseUrl = process.env.DATABASE_URL;
 const authSecret = process.env.BETTER_AUTH_SECRET;
 const authUrl = process.env.BETTER_AUTH_URL ?? "http://localhost:3000";
+const googleClientId = process.env.GOOGLE_CLIENT_ID;
+const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
+const githubClientId = process.env.GITHUB_CLIENT_ID;
+const githubClientSecret = process.env.GITHUB_CLIENT_SECRET;
 
 if (!databaseUrl) {
   throw new Error("DATABASE_URL is required for Better Auth.");
@@ -14,6 +20,14 @@ if (!databaseUrl) {
 
 if (!authSecret || authSecret.length < 32) {
   throw new Error("BETTER_AUTH_SECRET must contain at least 32 characters.");
+}
+
+if (Boolean(googleClientId) !== Boolean(googleClientSecret)) {
+  throw new Error("GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must be configured together.");
+}
+
+if (Boolean(githubClientId) !== Boolean(githubClientSecret)) {
+  throw new Error("GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET must be configured together.");
 }
 
 const globalForAuth = globalThis as unknown as {
@@ -45,6 +59,32 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 8,
+    resetPasswordTokenExpiresIn: 60 * 60,
+    revokeSessionsOnPasswordReset: true,
+    sendResetPassword: async ({ user, url }) => {
+      void sendPasswordResetEmail({ to: user.email, url }).catch((error: unknown) => {
+        console.error("Unable to send password reset email", error);
+      });
+    },
+  },
+  socialProviders: {
+    ...(googleClientId && googleClientSecret
+      ? {
+        google: {
+          clientId: googleClientId,
+          clientSecret: googleClientSecret,
+          prompt: "select_account",
+        },
+      }
+      : {}),
+    ...(githubClientId && githubClientSecret
+      ? {
+        github: {
+          clientId: githubClientId,
+          clientSecret: githubClientSecret,
+        },
+      }
+      : {}),
   },
   advanced: {
     database: {

@@ -1,11 +1,11 @@
 :root {
   color-scheme: dark;
-  --background: #08111f;
-  --surface: #101c2e;
-  --text: #edf4ff;
-  --muted: #a5b4c8;
-  --accent: #46d9b0;
-  --border: #263852;
+  --background: #0a0b0d;
+  --surface: #121316;
+  --text: #e6e8ec;
+  --muted: #8b8e96;
+  --accent: #ff1a35;
+  --border: #23252a;
 }
 
 * {
@@ -20,10 +20,8 @@ body {
   min-height: 100vh;
   margin: 0;
   color: var(--text);
-  background:
-    radial-gradient(circle at 85% 10%, #18345b 0, transparent 30rem),
-    var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--background);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 .shell {

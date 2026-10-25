@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 import { signOut, useSession } from "@/lib/auth-client";
+import { VideoScroll } from "./video-scroll";
 
 import styles from "./featured-showcase.module.css";
 
@@ -79,23 +80,41 @@ const productGroups = [
   },
 ] as const;
 
-function getSlot(index: number, activeIndex: number) {
+// True continuous circular conveyor calculation
+function getVirtualSlots(currentPosition: number) {
   const count = products.length;
-  // Calculate shortest circular distance
-  let diff = (index - (activeIndex % count) + count) % count;
-  if (diff > count / 2) {
-    diff -= count;
-  }
-  return diff;
-}
+  // We display 5 visible slots: -2, -1, 0 (active), +1, +2
+  // plus buffer slots -3 and +3 so items slide completely off-screen and into view cleanly
+  const slots: Array<{
+    productIndex: number;
+    offset: number;
+    isActive: boolean;
+    style: React.CSSProperties;
+    key: string;
+  }> = [];
 
-const slotClasses: Record<string, string> = {
-  "-2": styles.slotNegativeTwo,
-  "-1": styles.slotNegativeOne,
-  "0": styles.slotCenter,
-  "1": styles.slotPositiveOne,
-  "2": styles.slotPositiveTwo,
-};
+  for (let offset = -3; offset <= 3; offset++) {
+    const virtualIndex = currentPosition + offset;
+    const productIndex = ((virtualIndex % count) + count) % count;
+    const isActive = offset === 0;
+    const isOffscreen = Math.abs(offset) >= 3;
+
+    slots.push({
+      productIndex,
+      offset,
+      isActive,
+      key: `slot-${virtualIndex}`,
+      style: {
+        transform: `translateX(calc(-50% + (var(--card-pitch) * ${offset}))) scale(${isActive ? 1.28 : 0.76})`,
+        zIndex: isActive ? 25 : Math.max(1, 15 - Math.abs(offset) * 5),
+        opacity: isOffscreen ? 0 : isActive ? 1 : 0.72,
+        pointerEvents: isOffscreen ? ("none" as const) : undefined,
+      },
+    });
+  }
+
+  return slots;
+}
 
 function ArrowIcon({ direction }: { direction: "left" | "right" }) {
   const points = direction === "left" ? "15 19 8 12 15 5" : "9 5 16 12 9 19";
@@ -164,15 +183,15 @@ function ChevronIcon() {
 export function FeaturedShowcase() {
   const router = useRouter();
   const { data: session, isPending: sessionPending } = useSession();
-  const [activeIndex, setActiveIndex] = useState(2);
+  const [currentPosition, setCurrentPosition] = useState(2);
   const [signingOut, setSigningOut] = useState(false);
   const pointerStart = useRef<number | null>(null);
 
   const move = (direction: -1 | 1) => {
-    setActiveIndex((current) =>
-      (current + direction + products.length) % products.length,
-    );
+    setCurrentPosition((pos) => pos + direction);
   };
+
+  const activeIndex = ((currentPosition % products.length) + products.length) % products.length;
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -275,10 +294,38 @@ export function FeaturedShowcase() {
       <section className={styles.hero} id="featured" aria-labelledby="featured-heading">
         <div className={styles.heroHeader}>
           <p className={styles.eyebrow}>Compare · discover · decide</p>
-          <h1 id="featured-heading">Featured tech</h1>
+          <h1 id="featured-heading">TECHBONDHU</h1>
           <p className={styles.subheading}>
             Explore standout gear, compare local prices, and choose with confidence.
           </p>
+
+          <form
+            className={styles.searchBarContainer}
+            onSubmit={(e) => {
+              e.preventDefault();
+              const input = (e.currentTarget.elements.namedItem("search") as HTMLInputElement)?.value;
+              if (input?.trim()) {
+                window.location.href = `/products?q=${encodeURIComponent(input.trim())}`;
+              }
+            }}
+          >
+            <div className={styles.searchBar}>
+              <span className={styles.searchIcon}>
+                <SearchIcon />
+              </span>
+              <input
+                className={styles.searchInput}
+                type="search"
+                name="search"
+                placeholder="Search GPUs, processors, laptops, monitors..."
+                aria-label="Search tech gear"
+                autoComplete="off"
+              />
+              <button className={styles.searchSubmit} type="submit">
+                Search
+              </button>
+            </div>
+          </form>
         </div>
 
         <div
@@ -326,19 +373,23 @@ export function FeaturedShowcase() {
           </div>
 
           <div className={styles.stage}>
-            {products.map((product, index) => {
-              const slot = getSlot(index, activeIndex);
-              const isActive = slot === 0;
+            {getVirtualSlots(currentPosition).map((slot) => {
+              const product = products[slot.productIndex];
 
               return (
                 <button
-                  className={`${styles.productCard} ${slotClasses[String(slot) as keyof typeof slotClasses]} ${isActive ? styles.activeCard : ""}`}
+                  className={`${styles.productCard} ${slot.isActive ? styles.activeCard : ""}`}
                   data-product={product.id}
-                  key={product.id}
+                  key={slot.key}
+                  style={slot.style}
                   type="button"
-                  aria-label={`${isActive ? "Selected" : "View"} ${product.name}`}
-                  aria-current={isActive ? "true" : undefined}
-                  onClick={() => setActiveIndex(index)}
+                  aria-label={`${slot.isActive ? "Selected" : "View"} ${product.name}`}
+                  aria-current={slot.isActive ? "true" : undefined}
+                  onClick={() => {
+                    if (slot.offset !== 0) {
+                      setCurrentPosition((pos) => pos + slot.offset);
+                    }
+                  }}
                 >
                   <span className={styles.productVisual}>
                     <span className={styles.imageWrap}>
@@ -371,6 +422,47 @@ export function FeaturedShowcase() {
         <div><span>01</span><strong>Compare prices</strong><p>See offers from multiple tech stores in one place.</p></div>
         <div><span>02</span><strong>Find nearby</strong><p>Check where products are available before visiting.</p></div>
         <div><span>03</span><strong>Build smarter</strong><p>Plan compatible PC builds with clear guidance.</p></div>
+      </section>
+
+      <VideoScroll />
+
+      <section className={styles.techTelemetry} id="specs" aria-label="Tactical specifications">
+        <div className={styles.telemetryHeader}>
+          <div className={styles.hudBadge}>
+            <span className={styles.hudDot} />
+            <span className={styles.hudText}>SYS.TELEMETRY // VER 2.40</span>
+          </div>
+          <h2 className={styles.telemetryTitle}>TACTICAL COMPUTING DEPLOYMENT</h2>
+          <p className={styles.telemetrySubtitle}>
+            Engineered architecture designed for zero-latency benchmark indexing, real-time localized pricing, and hardware validation across regional vendors.
+          </p>
+        </div>
+
+        <div className={styles.telemetryGrid}>
+          <div className={styles.telemetryCard}>
+            <span className={styles.telemetryIndex}>[01] NODE_INTEGRITY</span>
+            <h3>Real-Time Pricing Matrix</h3>
+            <p>Direct API webhooks monitoring regional merchant stock, flash tariffs, and inventory shifts with microsecond cadence.</p>
+            <div className={styles.telemetryCode}>HEX: 0x4B92 · LATENCY: 1.2MS</div>
+          </div>
+          <div className={styles.telemetryCard}>
+            <span className={styles.telemetryIndex}>[02] THERMAL_OVERHEAD</span>
+            <h3>Hardware Compatibility Engine</h3>
+            <p>Strict socket, PCIe bifurcation, and PSU rail tolerance checks guarding your rig against bottlenecks and mechanical collisions.</p>
+            <div className={styles.telemetryCode}>TDP_MARGIN: +24% · BUS_GEN: 5.0</div>
+          </div>
+          <div className={styles.telemetryCard}>
+            <span className={styles.telemetryIndex}>[03] GRID_COORDINATES</span>
+            <h3>Proximity Verified Stores</h3>
+            <p>Geospatial store mapping with authenticated inventory confirmation before initiating physical transit.</p>
+            <div className={styles.telemetryCode}>SECTOR: DHAKA_CENTRAL · RAD: 12KM</div>
+          </div>
+        </div>
+
+        <div className={styles.footerBranding}>
+          <div className={styles.footerBrand}>TECHBONDHU // ARCHITECTURE MATRIX</div>
+          <div className={styles.footerStatus}>SYS.ONLINE · ALL CHANNELS NOMINAL</div>
+        </div>
       </section>
     </main>
   );

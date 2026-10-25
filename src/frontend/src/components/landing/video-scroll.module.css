@@ -1,0 +1,33 @@
+.container {
+  display: flex;
+  width: 100%;
+  max-width: 68rem;
+  margin: 1rem auto 6rem;
+  padding: 0 1.5rem;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  background: transparent;
+}
+
+.videoWrapper {
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  line-height: 0;
+}
+
+.video {
+  width: 100%;
+  max-width: 58rem;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  pointer-events: none;
+  background: transparent;
+  filter: drop-shadow(0 1.5rem 3rem rgba(0, 0, 0, 0.15));
+}

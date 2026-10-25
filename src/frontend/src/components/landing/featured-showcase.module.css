@@ -1,16 +1,24 @@
 .page {
-  --landing-bg: #f5f5f2;
-  --landing-surface: rgba(255, 255, 255, 0.92);
-  --landing-text: #121212;
-  --landing-muted: #68686d;
-  --landing-line: rgba(18, 18, 18, 0.12);
+  /* Tactical Cyberbrutal Palette */
+  --landing-bg: #0c0d10;
+  --landing-surface: #14161b;
+  --landing-surface-translucent: rgba(18, 20, 25, 0.88);
+  --landing-text: #f0f2f5;
+  --landing-muted: #848894;
+  --landing-line: #22252e;
+  --landing-accent: #ff1e38;
+  --landing-accent-glow: rgba(255, 30, 56, 0.22);
+  --landing-industrial-gray: #1b1d24;
+  --landing-gold: #e5a93c;
+  
   --card-width: clamp(9.5rem, 16vw, 15rem);
   --card-pitch: clamp(8.7rem, 17vw, 15.5rem);
+  
   min-height: 100vh;
-  overflow: hidden;
   color: var(--landing-text);
   background: var(--landing-bg);
-  font-family: "Space Grotesk", "Segoe UI", sans-serif;
+  font-family: "Inter", "Chakra Petch", -apple-system, sans-serif;
+  letter-spacing: -0.01em;
 }
 
 .grid {
@@ -19,13 +27,14 @@
   inset: 0;
   pointer-events: none;
   background-image:
-    url("data:image/svg+xml,%3Csvg width='160' height='160' viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M80 74v12M74 80h12' stroke='rgba(0,0,0,0.13)' stroke-width='1.2'/%3E%3Ccircle cx='80' cy='80' r='0.9' fill='rgba(0,0,0,0.2)'/%3E%3C/svg%3E"),
-    radial-gradient(circle, rgba(0, 0, 0, 0.15) 1px, transparent 1px);
-  background-position: center;
-  background-size: 160px 160px, 80px 80px;
-  opacity: 0.8;
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.25) 100%);
+  opacity: 0.65;
 }
 
+/* UI Navigation - Clean Geometric Sans-Serif */
 .navbar {
   position: fixed;
   z-index: 100;
@@ -43,34 +52,32 @@
   grid-template-columns: auto minmax(0, 1fr) auto;
   column-gap: 1rem;
   border: 1px solid var(--landing-line);
-  border-radius: 999px;
-  background: var(--landing-surface);
-  box-shadow: 0 0.75rem 2.5rem rgba(0, 0, 0, 0.08);
-  backdrop-filter: blur(18px);
+  border-radius: 4px;
+  background: var(--landing-surface-translucent);
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
 }
-
-.utilityButton {
-  display: grid;
-  width: 2.65rem;
-  height: 2.65rem;
-  padding: 0;
-  place-items: center;
-  border: 0;
-  border-radius: 50%;
-  color: var(--landing-text);
-  background: transparent;
-}
-
-.utilityButton:hover { background: rgba(0, 0, 0, 0.06); }
-.utilityButton svg { width: 1.1rem; fill: none; stroke: currentColor; stroke-width: 1.7; }
 
 .brand {
   flex: 0 0 auto;
   color: var(--landing-text);
-  font-size: 0.88rem;
+  font-family: "Teko", sans-serif;
+  font-size: 1.6rem;
   font-weight: 700;
-  letter-spacing: 0.19em;
+  letter-spacing: 0.12em;
   text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.brand::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: var(--landing-accent);
+  box-shadow: 0 0 10px var(--landing-accent);
 }
 
 .publicNav {
@@ -78,23 +85,27 @@
   min-width: 0;
   align-items: center;
   justify-content: center;
-  gap: 0.12rem;
+  gap: 0.25rem;
 }
 
 .publicNav > button,
 .productsTrigger {
   display: inline-flex;
-  min-height: 2.7rem;
-  padding: 0.62rem 0.82rem;
+  min-height: 2.5rem;
+  padding: 0.5rem 0.85rem;
   align-items: center;
   gap: 0.38rem;
-  border: 0;
-  border-radius: 999px;
-  color: #4e4e53;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  color: var(--landing-muted);
   background: transparent;
-  font-size: 0.82rem;
+  font-family: "Inter", sans-serif;
+  font-size: 0.8rem;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   white-space: nowrap;
+  transition: all 150ms ease;
 }
 
 .publicNav > button:hover,
@@ -102,13 +113,14 @@
 .productsMenu:focus-within .productsTrigger,
 .productsMenu:hover .productsTrigger {
   color: var(--landing-text);
-  background: rgba(0, 0, 0, 0.055);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 .productsMenu { position: static; }
-.productsTrigger svg { width: 0.8rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.6; transition: transform 180ms ease; }
+.productsTrigger svg { width: 0.75rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; transition: transform 180ms ease; }
 .productsMenu:hover .productsTrigger svg,
-.productsMenu:focus-within .productsTrigger svg { transform: rotate(180deg); }
+.productsMenu:focus-within .productsTrigger svg { transform: rotate(180deg); color: var(--landing-accent); }
 
 .megaMenu {
   visibility: hidden;
@@ -118,14 +130,14 @@
   left: 50%;
   width: min(82rem, calc(100vw - 2rem));
   overflow: hidden;
-  border: 1px solid rgba(18, 18, 18, 0.12);
-  border-radius: 0.9rem;
-  background: rgba(251, 251, 249, 0.985);
-  box-shadow: 0 1.8rem 5rem rgba(16, 18, 18, 0.16);
+  border: 1px solid var(--landing-line);
+  border-radius: 4px;
+  background: rgba(16, 18, 22, 0.98);
+  box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 30, 56, 0.15);
   opacity: 0;
   transform: translate(-50%, -0.45rem);
   transition: opacity 180ms ease, transform 180ms ease, visibility 180ms;
-  backdrop-filter: blur(22px);
+  backdrop-filter: blur(24px);
 }
 
 .productsMenu:hover .megaMenu,
@@ -135,22 +147,22 @@
   transform: translate(-50%, 0);
 }
 
-.megaAccent { display: block; width: 10rem; height: 3px; margin-left: 1.5rem; background: #1a1a1a; }
+.megaAccent { display: block; width: 8rem; height: 3px; margin-left: 1.5rem; background: var(--landing-accent); box-shadow: 0 0 12px var(--landing-accent); }
 .megaMenuGrid { display: grid; min-height: 24rem; padding: 1.75rem 1.5rem 2rem; grid-template-columns: repeat(6, 1fr); gap: 1.8rem; }
 .megaMenuGrid section { min-width: 0; }
-.categoryIcon { display: block; width: 5.1rem; height: 4.35rem; margin-bottom: 0.9rem; object-fit: contain; object-position: left center; filter: brightness(0); }
+.categoryIcon { display: block; width: 4.5rem; height: 4rem; margin-bottom: 0.8rem; object-fit: contain; object-position: left center; filter: invert(0.85) sepia(1) hue-rotate(300deg) saturate(3); }
 .categoryIcon[src$="ps5-controller.png"] { filter: none; transform: scale(1.35); transform-origin: left center; }
-.megaMenuGrid h2 { margin: 0 0 0.6rem; color: #171717; font-size: 0.78rem; font-weight: 750; letter-spacing: 0.045em; text-transform: uppercase; }
+.megaMenuGrid h2 { margin: 0 0 0.6rem; color: #fff; font-family: "Teko", sans-serif; font-size: 1.15rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
 .megaMenuGrid ul { display: grid; margin: 0; padding: 0; gap: 0.1rem; list-style: none; }
-.megaMenuGrid li button { width: 100%; padding: 0.32rem 0; border: 0; color: #66666a; background: transparent; font-size: 0.72rem; font-weight: 550; line-height: 1.3; text-align: left; }
-.megaMenuGrid li button:hover { color: #111111; transform: translateX(2px); }
+.megaMenuGrid li button { width: 100%; padding: 0.32rem 0; border: 0; color: #7f838f; background: transparent; font-size: 0.74rem; font-weight: 500; text-align: left; transition: all 120ms ease; }
+.megaMenuGrid li button:hover { color: var(--landing-accent); transform: translateX(3px); }
 
 .dealsButton span {
-  width: 0.38rem;
-  height: 0.38rem;
+  width: 0.42rem;
+  height: 0.42rem;
   border-radius: 50%;
-  background: #ef6a3d;
-  box-shadow: 0 0 0 3px rgba(239, 106, 61, 0.13);
+  background: var(--landing-accent);
+  box-shadow: 0 0 8px var(--landing-accent);
 }
 
 .navActions {
@@ -162,132 +174,256 @@
 
 .builderButton {
   display: inline-flex;
-  height: 2.7rem;
-  padding: 0 0.55rem 0 0.8rem;
+  height: 2.6rem;
+  padding: 0 0.55rem 0 0.85rem;
   align-items: center;
   gap: 0.48rem;
-  border: 1px solid #1b1b1b;
-  border-radius: 999px;
-  color: #1b1b1b;
-  background: #f8f8f6;
-  box-shadow: 0 0.3rem 0.9rem rgba(0, 0, 0, 0.06);
-  font-size: 0.78rem;
+  border: 1px solid var(--landing-accent);
+  border-radius: 2px;
+  color: #fff;
+  background: rgba(255, 30, 56, 0.12);
+  box-shadow: 0 0 15px rgba(255, 30, 56, 0.25);
+  font-family: "Chakra Petch", sans-serif;
+  font-size: 0.82rem;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   white-space: nowrap;
-  transition: color 180ms ease, background 180ms ease, transform 180ms ease;
+  transition: all 180ms ease;
 }
 
-.builderButton:hover { color: white; background: #1b1b1b; transform: translateY(-1px); }
-.builderButton > svg { width: 1rem; fill: none; stroke: currentColor; stroke-width: 1.5; }
-.builderArrow { display: grid; width: 1.65rem; height: 1.65rem; place-items: center; border-radius: 50%; background: rgba(0, 0, 0, 0.06); }
-.builderButton:hover .builderArrow { background: rgba(255, 255, 255, 0.12); }
-.builderArrow svg { width: 0.78rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
+.builderButton:hover { color: #fff; background: var(--landing-accent); box-shadow: 0 0 25px rgba(255, 30, 56, 0.5); transform: translateY(-1px); }
+.builderButton > svg { width: 1rem; fill: none; stroke: currentColor; stroke-width: 1.7; }
+.builderArrow { display: grid; width: 1.55rem; height: 1.55rem; place-items: center; border-radius: 2px; background: rgba(0, 0, 0, 0.35); }
+.builderButton:hover .builderArrow { background: rgba(0, 0, 0, 0.5); }
+.builderArrow svg { width: 0.78rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
+
+.utilityButton {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  place-items: center;
+  border: 1px solid var(--landing-line);
+  border-radius: 2px;
+  color: var(--landing-muted);
+  background: rgba(255, 255, 255, 0.02);
+}
+.utilityButton:hover { color: #fff; background: rgba(255, 255, 255, 0.06); border-color: rgba(255, 255, 255, 0.15); }
+.utilityButton svg { width: 1rem; fill: none; stroke: currentColor; stroke-width: 1.7; }
 
 .locationButton {
   display: inline-flex;
-  min-height: 2.65rem;
-  padding: 0 0.7rem;
+  min-height: 2.5rem;
+  padding: 0 0.75rem;
   align-items: center;
   gap: 0.35rem;
-  border: 0;
-  border-radius: 999px;
-  color: #4e4e53;
+  border: 1px solid var(--landing-line);
+  border-radius: 2px;
+  color: var(--landing-muted);
   background: transparent;
-  font-size: 0.78rem;
-  font-weight: 650;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
 }
-
-.locationButton:hover { color: var(--landing-text); background: rgba(0, 0, 0, 0.055); }
-.locationButton svg { width: 1rem; fill: none; stroke: currentColor; stroke-width: 1.65; }
+.locationButton:hover { color: var(--landing-text); border-color: rgba(255, 255, 255, 0.2); }
+.locationButton svg { width: 0.95rem; fill: none; stroke: currentColor; stroke-width: 1.7; color: var(--landing-accent); }
 
 .signInButton,
 .accountIdentity,
 .signOutButton {
   display: inline-flex;
-  min-height: 2.65rem;
+  min-height: 2.5rem;
   padding: 0 1rem;
   align-items: center;
   justify-content: center;
-  border-radius: 999px;
+  border-radius: 2px;
+  font-family: "Inter", sans-serif;
   font-size: 0.78rem;
-  font-weight: 700;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   text-decoration: none;
   white-space: nowrap;
+  border: 1px solid var(--landing-line);
 }
 
 .signInButton {
   gap: 0.38rem;
-  color: var(--landing-text);
+  color: #fff;
+  background: #181a20;
 }
-
-.signInButton svg,
-.accountIdentity svg { width: 1rem; fill: none; stroke: currentColor; stroke-width: 1.7; }
-
-.signInButton:hover {
-  background: rgba(0, 0, 0, 0.055);
-}
+.signInButton:hover { background: #23262f; border-color: rgba(255, 255, 255, 0.2); }
+.signInButton svg, .accountIdentity svg { width: 0.95rem; fill: none; stroke: currentColor; stroke-width: 1.7; }
 
 .accountActions { display: flex; align-items: center; gap: 0.25rem; }
-.accountIdentity { max-width: 8.5rem; gap: 0.42rem; padding-inline: 0.82rem; color: var(--landing-text); background: rgba(0, 0, 0, 0.045); }
-.accountIdentity span { overflow: hidden; text-overflow: ellipsis; }
-.signOutButton { padding-inline: 0.82rem; border: 0; color: #5f6065; background: transparent; }
-.signOutButton:hover:not(:disabled) { color: var(--landing-text); background: rgba(0, 0, 0, 0.055); }
+.accountIdentity { max-width: 8.5rem; gap: 0.42rem; padding-inline: 0.82rem; color: #fff; background: #191c24; }
+.accountIdentity span { overflow: hidden; text-overflow: ellipsis; font-family: "JetBrains Mono", monospace; }
+.signOutButton { padding-inline: 0.82rem; border-color: transparent; color: #848894; background: transparent; }
+.signOutButton:hover:not(:disabled) { color: var(--landing-accent); background: rgba(255, 30, 56, 0.08); }
 .signOutButton:disabled { cursor: wait; opacity: .55; }
-.authLoading { width: 6.4rem; height: 2.65rem; border-radius: 999px; background: rgba(0, 0, 0, 0.055); animation: authPulse 1.2s ease-in-out infinite; }
+.authLoading { width: 5.5rem; height: 2.5rem; border-radius: 2px; background: rgba(255, 255, 255, 0.05); animation: authPulse 1.2s ease-in-out infinite; }
 
+/* Hero Section */
 .hero {
   display: flex;
   position: relative;
   z-index: 1;
   min-height: 100svh;
-  padding: 7rem 1rem 2.25rem;
+  padding: 8rem 1rem 3rem;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-.heroHeader { z-index: 4; text-align: center; }
-
-.eyebrow {
-  margin: 0 0 0.7rem;
-  color: var(--landing-muted);
-  font-size: 0.66rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
+.heroHeader {
+  position: relative;
+  z-index: 50;
+  text-align: center;
 }
 
+/* Monospace Technical Serial Codes */
+.eyebrow {
+  margin: 0 0 0.5rem;
+  color: var(--landing-accent);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.eyebrow::before, .eyebrow::after {
+  content: "//";
+  opacity: 0.6;
+}
+
+/* Heavy Condensed Sans-Serif Headlines */
 .heroHeader h1 {
   max-width: none;
   margin: 0;
-  font-family: "Courier New", monospace;
-  font-size: clamp(2rem, 4.7vw, 4.25rem);
-  line-height: 0.95;
-  letter-spacing: clamp(0.15rem, 0.6vw, 0.55rem);
+  font-family: "Teko", "Impact", sans-serif;
+  font-size: clamp(3.5rem, 9vw, 8rem);
+  font-weight: 700;
+  line-height: 0.86;
+  letter-spacing: clamp(0.08rem, 0.4vw, 0.25rem);
   text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 0 40px rgba(0, 0, 0, 0.9);
 }
 
 .subheading {
-  max-width: 35rem;
-  margin: 0.85rem auto 0;
+  max-width: 38rem;
+  margin: 1rem auto 0;
   color: var(--landing-muted);
-  font-size: clamp(0.82rem, 1.25vw, 1rem);
-  line-height: 1.5;
+  font-family: "Inter", sans-serif;
+  font-size: clamp(0.85rem, 1.2vw, 1.05rem);
+  line-height: 1.6;
 }
 
+/* Tactical HUD Search Bar */
+.searchBarContainer {
+  margin: 1.6rem auto 0;
+  width: min(100%, 34rem);
+  padding: 0 1rem;
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(18, 20, 26, 0.9);
+  border: 1px solid var(--landing-line);
+  border-radius: 4px;
+  padding: 0.35rem 0.45rem 0.35rem 1rem;
+  box-shadow: 0 0.75rem 2.5rem rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px);
+  transition: all 180ms ease;
+}
+
+.searchBar:focus-within {
+  border-color: var(--landing-accent);
+  box-shadow: 0 0 20px rgba(255, 30, 56, 0.25), inset 0 0 0 1px var(--landing-accent);
+}
+
+.searchIcon {
+  width: 1.15rem;
+  height: 1.15rem;
+  color: var(--landing-accent);
+  flex-shrink: 0;
+}
+
+.searchIcon svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  color: #fff;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.searchInput::placeholder {
+  color: #5d616c;
+}
+
+.searchSubmit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: var(--landing-accent);
+  color: white;
+  font-family: "Chakra Petch", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.62rem 1.25rem;
+  border-radius: 2px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 150ms ease;
+}
+
+.searchSubmit:hover {
+  background: #ff334b;
+  box-shadow: 0 0 15px rgba(255, 30, 56, 0.6);
+  transform: translateY(-1px);
+}
+
+/* Carousel Section */
 .carousel {
   position: relative;
   width: min(100%, 94rem);
   height: clamp(21rem, 48vw, 31rem);
   touch-action: pan-y;
   user-select: none;
+  overflow: hidden;
 }
 
-.stage { position: absolute; inset: 0; }
+.stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
 
 .productCard {
   --scale: 0.76;
-  --x-offset: 0px;
   position: absolute;
   bottom: 2rem;
   left: 50%;
@@ -302,7 +438,6 @@
   color: var(--landing-text);
   background: transparent;
   opacity: 0.72;
-  transform: translateX(calc(-50% + var(--x-offset))) scale(var(--scale));
   transform-origin: bottom center;
   will-change: transform, opacity;
   transition:
@@ -312,53 +447,15 @@
   -webkit-font-smoothing: antialiased;
 }
 
-.slotNegativeTwo {
-  --x-offset: calc(var(--card-pitch) * -2);
-  z-index: 5;
-}
-
-.slotNegativeOne {
-  --x-offset: calc(var(--card-pitch) * -1);
-  z-index: 10;
-}
-
-.slotCenter {
-  --x-offset: 0px;
-  z-index: 25;
-}
-
-.slotPositiveOne {
-  --x-offset: var(--card-pitch);
-  z-index: 10;
-}
-
-.slotPositiveTwo {
-  --x-offset: calc(var(--card-pitch) * 2);
-  z-index: 5;
-}
-
-.slotHiddenLeft {
-  --x-offset: calc(var(--card-pitch) * -2.8);
-  opacity: 0 !important;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.slotHiddenRight {
-  --x-offset: calc(var(--card-pitch) * 2.8);
-  opacity: 0 !important;
-  pointer-events: none;
-  z-index: 1;
-}
-
 .productCard:hover:not(.activeCard) {
   --scale: 0.82;
-  opacity: 1;
+  opacity: 0.95;
 }
 
 .activeCard {
   --scale: 1.28;
   opacity: 1;
+  z-index: 25 !important;
   cursor: default;
 }
 
@@ -376,7 +473,7 @@
 }
 
 .imageWrap { display: flex; width: 100%; height: 90%; align-items: flex-end; justify-content: center; }
-.imageWrap img { max-width: 94%; max-height: 100%; object-fit: contain; pointer-events: none; filter: drop-shadow(0 0.8rem 1.2rem rgba(0, 0, 0, 0.08)); }
+.imageWrap img { max-width: 94%; max-height: 100%; object-fit: contain; pointer-events: none; filter: drop-shadow(0 1.2rem 2.2rem rgba(0, 0, 0, 0.75)); }
 .productCard[data-product="pc"] .imageWrap img { max-width: 125%; max-height: 112%; }
 
 .productShadow {
@@ -384,13 +481,13 @@
   height: 0.8rem;
   margin-top: 0.2rem;
   border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.06) 55%, transparent 75%);
-  filter: blur(3px);
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.8), rgba(255, 30, 56, 0.08) 50%, transparent 75%);
+  filter: blur(4px);
 }
 
 .productInfo { display: flex; min-height: 3.2rem; margin-top: 0.9rem; flex-direction: column; align-items: center; justify-content: center; white-space: nowrap; }
-.productInfo strong { font-size: clamp(0.72rem, 1vw, 0.9rem); font-weight: 600; }
-.productInfo span { margin-top: 0.25rem; color: var(--landing-muted); font-size: clamp(0.65rem, 0.9vw, 0.8rem); }
+.productInfo strong { font-family: "Chakra Petch", sans-serif; font-size: clamp(0.78rem, 1.1vw, 1rem); font-weight: 700; letter-spacing: 0.04em; color: #fff; }
+.productInfo span { margin-top: 0.25rem; color: var(--landing-accent); font-family: "JetBrains Mono", monospace; font-size: clamp(0.7rem, 0.9vw, 0.82rem); font-weight: 600; }
 
 .arrow {
   display: grid;
@@ -401,42 +498,60 @@
   height: 2.75rem;
   padding: 0;
   place-items: center;
-  border: 0;
-  border-radius: 50%;
-  color: #737379;
-  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--landing-line);
+  border-radius: 2px;
+  color: var(--landing-muted);
+  background: rgba(16, 18, 22, 0.85);
   transform: translateY(-50%);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
+  transition: all 150ms ease;
 }
 
-.arrow:hover { color: #111; background: rgba(255, 255, 255, 0.92); }
-.arrow svg { width: 1.45rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.7; }
-.arrowPrevious { left: max(0.25rem, calc(50% - 36rem)); }
-.arrowNext { right: max(0.25rem, calc(50% - 36rem)); }
+.arrow:hover { color: #fff; background: var(--landing-surface); border-color: var(--landing-accent); box-shadow: 0 0 15px rgba(255, 30, 56, 0.3); }
+.arrow svg { width: 1.35rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
+.arrowPrevious { left: max(0.5rem, calc(50% - 36rem)); }
+.arrowNext { right: max(0.5rem, calc(50% - 36rem)); }
 
-.reticle { position: absolute; z-index: 30; inset: 0; pointer-events: none; color: rgba(0, 0, 0, 0.26); }
-.reticle span { position: absolute; font-size: 1.2rem; font-weight: 300; }
+/* HUD Framing Brackets and Reticle */
+.reticle { position: absolute; z-index: 30; inset: 0; pointer-events: none; color: rgba(255, 30, 56, 0.45); }
+.reticle span { position: absolute; font-family: "JetBrains Mono", monospace; font-size: 1.1rem; font-weight: 400; text-shadow: 0 0 8px rgba(255, 30, 56, 0.5); }
 .reticleTop { top: 4%; left: 50%; }
 .reticleBottom { bottom: 9%; left: 50%; }
 .reticleLeft { top: 50%; left: calc(50% - var(--card-pitch) * 0.58); }
 .reticleRight { top: 50%; left: calc(50% + var(--card-pitch) * 0.58); }
 
-.heroActions { display: flex; z-index: 4; min-height: 2.65rem; margin-top: -0.5rem; align-items: center; gap: 0.55rem; }
+.heroActions { display: flex; z-index: 4; min-height: 2.65rem; margin-top: -0.5rem; align-items: center; gap: 0.65rem; }
 .currentProduct { display: none; }
 
 .primaryAction,
 .secondaryAction {
-  padding: 0.72rem 1rem;
-  border: 1px solid var(--landing-text);
-  border-radius: 999px;
-  font-size: 0.78rem;
-  font-weight: 650;
+  padding: 0.72rem 1.4rem;
+  border-radius: 2px;
+  font-family: "Chakra Petch", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   text-decoration: none;
+  transition: all 180ms ease;
 }
 
-.primaryAction { color: white; background: var(--landing-text); }
-.secondaryAction { color: var(--landing-text); background: rgba(255, 255, 255, 0.5); }
+.primaryAction {
+  color: white;
+  background: var(--landing-accent);
+  border: 1px solid var(--landing-accent);
+  box-shadow: 0 0 20px rgba(255, 30, 56, 0.35);
+}
+.primaryAction:hover { background: #ff334b; box-shadow: 0 0 30px rgba(255, 30, 56, 0.6); transform: translateY(-1px); }
 
+.secondaryAction {
+  color: var(--landing-text);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--landing-line);
+}
+.secondaryAction:hover { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.2); }
+
+/* Value Strip - Tactical HUD Grid */
 .valueStrip {
   display: grid;
   position: relative;
@@ -446,14 +561,168 @@
   border-top: 1px solid var(--landing-line);
   border-bottom: 1px solid var(--landing-line);
   grid-template-columns: repeat(3, 1fr);
-  background: rgba(245, 245, 242, 0.86);
+  background: var(--landing-surface);
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.5);
 }
 
-.valueStrip div { display: grid; padding: 1.5rem; grid-template-columns: auto 1fr; column-gap: 0.85rem; }
+.valueStrip div { display: grid; padding: 1.75rem; grid-template-columns: auto 1fr; column-gap: 1rem; }
 .valueStrip div + div { border-left: 1px solid var(--landing-line); }
-.valueStrip span { grid-row: span 2; color: #8b8b90; font-family: monospace; font-size: 0.72rem; }
-.valueStrip strong { font-size: 0.9rem; }
-.valueStrip p { margin: 0.35rem 0 0; color: var(--landing-muted); font-size: 0.78rem; line-height: 1.45; }
+.valueStrip span { grid-row: span 2; color: var(--landing-accent); font-family: "JetBrains Mono", monospace; font-size: 0.85rem; font-weight: 700; }
+.valueStrip strong { font-family: "Chakra Petch", sans-serif; font-size: 1.05rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: #fff; }
+.valueStrip p { margin: 0.35rem 0 0; color: var(--landing-muted); font-size: 0.82rem; line-height: 1.5; }
+
+/* Technical Telemetry Section Below Video */
+.techTelemetry {
+  position: relative;
+  z-index: 2;
+  width: min(72rem, calc(100% - 2rem));
+  margin: 0 auto 6rem;
+  padding: 3rem 0;
+}
+
+.telemetryHeader {
+  margin-bottom: 2.5rem;
+}
+
+.hudBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--landing-line);
+  border-radius: 2px;
+  background: rgba(255, 30, 56, 0.06);
+  margin-bottom: 0.85rem;
+}
+
+.hudDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--landing-accent);
+  box-shadow: 0 0 8px var(--landing-accent);
+}
+
+.hudText {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--landing-accent);
+}
+
+.telemetryTitle {
+  font-family: "Teko", sans-serif;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: 0.05em;
+  color: #fff;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.telemetrySubtitle {
+  max-width: 42rem;
+  margin: 0.8rem 0 0;
+  color: var(--landing-muted);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.telemetryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.telemetryCard {
+  background: var(--landing-surface);
+  border: 1px solid var(--landing-line);
+  border-radius: 2px;
+  padding: 1.8rem;
+  position: relative;
+  transition: all 180ms ease;
+}
+
+.telemetryCard:hover {
+  border-color: rgba(255, 30, 56, 0.4);
+  box-shadow: 0 0 25px rgba(255, 30, 56, 0.1);
+  transform: translateY(-2px);
+}
+
+.telemetryCard::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 12px;
+  height: 12px;
+  border-top: 2px solid var(--landing-accent);
+  border-left: 2px solid var(--landing-accent);
+}
+
+.telemetryIndex {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.75rem;
+  color: var(--landing-accent);
+  display: block;
+  margin-bottom: 0.6rem;
+  font-weight: 600;
+}
+
+.telemetryCard h3 {
+  font-family: "Chakra Petch", sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.5rem;
+}
+
+.telemetryCard p {
+  color: var(--landing-muted);
+  font-size: 0.82rem;
+  line-height: 1.55;
+  margin: 0 0 1.25rem;
+}
+
+.telemetryCode {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.68rem;
+  color: #6a6f7d;
+  background: #0d0e12;
+  padding: 0.45rem 0.6rem;
+  border-radius: 2px;
+  border-left: 2px solid var(--landing-line);
+}
+
+.footerBranding {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--landing-line);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  color: #555966;
+}
+
+.footerBrand {
+  letter-spacing: 0.15em;
+  font-weight: 600;
+}
+
+.footerStatus {
+  letter-spacing: 0.1em;
+}
+
+@media (max-width: 900px) {
+  .telemetryGrid {
+    grid-template-columns: 1fr;
+  }
+}
 
 @media (max-width: 720px) {
   .page { --card-width: 9.5rem; --card-pitch: 8.2rem; }
@@ -468,6 +737,7 @@
   .reticleTop { top: 10%; }
   .valueStrip { grid-template-columns: 1fr; }
   .valueStrip div + div { border-top: 1px solid var(--landing-line); border-left: 0; }
+  .footerBranding { flex-direction: column; gap: 0.5rem; align-items: flex-start; }
 }
 
 @media (max-width: 1260px) {

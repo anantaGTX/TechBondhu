@@ -1,18 +1,19 @@
 .loginShell {
-  --ink: #111214;
-  --muted: #65676c;
-  --quiet: #929499;
-  --line: #d9dadd;
-  --paper: #f3f7f8;
-  --white: #ffffff;
-  --blue: #1769e0;
-  --red: #c83c38;
+  --ink: #f0f2f5;
+  --muted: #848894;
+  --quiet: #5d616c;
+  --line: #292c35;
+  --paper: #111318;
+  --white: #0c0d10;
+  --surface: #14161b;
+  --blue: #ff1e38;
+  --red: #ff5a6d;
   min-height: 100dvh;
   display: grid;
   grid-template-columns: minmax(0, 52%) minmax(480px, 48%);
   color: var(--ink);
   background: var(--white);
-  font-family: "Space Grotesk", Inter, ui-sans-serif, system-ui, sans-serif;
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
 .loginShell *,
@@ -30,7 +31,12 @@
   padding: clamp(32px, 4vw, 68px);
   display: grid;
   grid-template-rows: auto auto minmax(350px, 1fr) auto;
-  background: var(--paper);
+  border-right: 1px solid var(--line);
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, .025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, .025) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
 .brand {
@@ -38,9 +44,10 @@
   z-index: 3;
   width: max-content;
   color: var(--ink);
-  font-size: clamp(15px, 1.15vw, 19px);
+  font-family: "Teko", sans-serif;
+  font-size: clamp(20px, 1.55vw, 27px);
   font-weight: 700;
-  letter-spacing: .18em;
+  letter-spacing: .12em;
   text-decoration: none;
 }
 .brand span { color: var(--blue); }
@@ -55,15 +62,20 @@
 .formHeader > p {
   margin: 0 0 12px;
   color: var(--blue);
+  font-family: "JetBrains Mono", monospace;
   font-size: 10px;
-  font-weight: 600;
-  letter-spacing: .17em;
+  font-weight: 700;
+  letter-spacing: .2em;
+  text-transform: uppercase;
 }
 .visualIntro h2 {
   margin: 0;
-  font-size: clamp(28px, 2.8vw, 46px);
-  line-height: 1.03;
-  letter-spacing: -.055em;
+  font-family: "Teko", sans-serif;
+  font-size: clamp(36px, 4vw, 64px);
+  font-weight: 700;
+  line-height: .92;
+  letter-spacing: .025em;
+  text-transform: uppercase;
 }
 
 .pcStage {
@@ -83,7 +95,8 @@
   right: 13%;
   bottom: 6%;
   height: 1px;
-  background: #cfd5d7;
+  background: #343741;
+  box-shadow: 0 0 18px rgba(255, 30, 56, .18);
 }
 
 .buildFrame {
@@ -98,7 +111,7 @@
   pointer-events: none;
   user-select: none;
   transform: translateY(14px) scale(.975);
-  filter: drop-shadow(0 15px 18px rgba(45, 55, 64, .1));
+  filter: drop-shadow(0 20px 30px rgba(0, 0, 0, .48));
   transition: opacity 480ms ease, transform 620ms cubic-bezier(.2, .8, .2, 1), filter 400ms ease;
   will-change: opacity, transform;
 }
@@ -108,7 +121,7 @@
   transform: translateY(0) scale(1);
 }
 .statussubmitting .frameActive { animation: systemCheck 1.4s ease-in-out infinite; }
-.statussuccess .frameActive { filter: drop-shadow(0 18px 24px rgba(23, 105, 224, .18)); }
+.statussuccess .frameActive { filter: drop-shadow(0 18px 28px rgba(255, 30, 56, .28)); }
 .statuserror .frameActive { animation: errorNudge 320ms ease-out; }
 
 .buildCaption {
@@ -126,15 +139,17 @@
   height: 35px;
   display: grid;
   place-items: center;
-  border-radius: 50%;
+  border: 1px solid rgba(255, 30, 56, .7);
+  border-radius: 2px;
   color: white;
-  background: var(--blue);
+  background: rgba(255, 30, 56, .14);
+  box-shadow: 0 0 16px rgba(255, 30, 56, .18);
 }
 .captionIcon svg { width: 16px; height: 16px; }
 .statussubmitting + .buildCaption .captionIcon svg { animation: spin 1s linear infinite; }
 .buildCaption > span:last-child { display: grid; gap: 3px; }
-.buildCaption strong { font-size: 13px; font-weight: 600; }
-.buildCaption small { color: var(--muted); font-size: 11px; }
+.buildCaption strong { font-family: "Chakra Petch", sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.buildCaption small { color: var(--muted); font-family: "JetBrains Mono", monospace; font-size: 10px; }
 
 .formPanel {
   position: relative;
@@ -152,9 +167,12 @@
 .formHeader { margin-bottom: 36px; }
 .formHeader h1 {
   margin: 0;
-  font-size: clamp(38px, 4vw, 58px);
-  line-height: 1;
-  letter-spacing: -.06em;
+  font-family: "Teko", sans-serif;
+  font-size: clamp(48px, 5vw, 72px);
+  font-weight: 700;
+  line-height: .9;
+  letter-spacing: .02em;
+  text-transform: uppercase;
 }
 .formHeader > span {
   display: block;
@@ -177,30 +195,30 @@
   min-width: 0;
   min-height: 46px;
   padding: 0 15px;
-  border: 1px solid #747775;
-  border-radius: 8px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 9px;
-  color: #1f1f1f;
-  background: var(--white);
+  color: var(--ink);
+  background: var(--surface);
   cursor: pointer;
   font-size: 13px;
   font-weight: 600;
   line-height: 20px;
   white-space: nowrap;
-  box-shadow: 0 1px 2px rgba(17, 18, 20, .05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .035);
   transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 .socialButton:hover:not(:disabled) {
-  border-color: #4f5154;
-  background: #f8f9fa;
-  box-shadow: 0 2px 7px rgba(17, 18, 20, .1);
+  border-color: rgba(255, 30, 56, .75);
+  background: #191b21;
+  box-shadow: 0 0 16px rgba(255, 30, 56, .12);
   transform: translateY(-1px);
 }
 .socialButton:active:not(:disabled) { box-shadow: none; transform: translateY(0); }
-.socialButton:focus-visible { outline: 3px solid rgba(23, 105, 224, .18); outline-offset: 3px; }
+.socialButton:focus-visible { outline: 2px solid rgba(255, 30, 56, .55); outline-offset: 3px; }
 .socialButton:disabled { cursor: wait; opacity: .72; }
 .socialButton svg { flex: 0 0 auto; width: 18px; height: 18px; }
 .socialButtonLoading svg { animation: spin 1s linear infinite; }
@@ -214,11 +232,12 @@
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: .08em;
+  font-family: "JetBrains Mono", monospace;
 }
 .formDivider::before, .formDivider::after { content: ""; height: 1px; flex: 1; background: var(--line); }
 
 .fieldGroup { margin-top: 21px; }
-.fieldGroup label { font-size: 13px; font-weight: 600; }
+.fieldGroup label { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
 .inputFrame {
   min-height: 56px;
   margin-top: 9px;
@@ -226,12 +245,12 @@
   align-items: center;
   gap: 8px;
   padding: 0 15px;
-  border: 1px solid #cfd1d4;
-  border-radius: 5px;
-  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--surface);
   transition: border-color 160ms ease, box-shadow 160ms ease;
 }
-.inputFrame:focus-within { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(23, 105, 224, .1); }
+.inputFrame:focus-within { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(255, 30, 56, .12), 0 0 18px rgba(255, 30, 56, .1); }
 .inputFrame.hasError { border-color: var(--red); }
 .inputFrame input {
   width: 100%;
@@ -244,9 +263,9 @@
   background: transparent;
   font-size: 15px;
 }
-.inputFrame input::placeholder { color: #a2a4a8; }
+.inputFrame input::placeholder { color: #5d616c; }
 .inputFrame input:disabled { opacity: .7; }
-.validMark { flex: 0 0 auto; color: #26875d; }
+.validMark { flex: 0 0 auto; color: #42c98b; }
 
 .revealButton {
   border: 0;
@@ -286,14 +305,14 @@
   height: 18px;
   display: grid;
   place-items: center;
-  border: 1px solid #bfc2c6;
-  border-radius: 3px;
-  background: white;
+  border: 1px solid #434650;
+  border-radius: 2px;
+  background: var(--surface);
 }
 .customCheck svg { width: 12px; height: 12px; opacity: 0; }
 .rememberControl input:checked + .customCheck { color: white; border-color: var(--blue); background: var(--blue); }
 .rememberControl input:checked + .customCheck svg { opacity: 1; }
-.rememberControl input:focus-visible + .customCheck { outline: 3px solid rgba(23, 105, 224, .18); outline-offset: 2px; }
+.rememberControl input:focus-visible + .customCheck { outline: 2px solid rgba(255, 30, 56, .5); outline-offset: 2px; }
 .forgotButton {
   padding: 2px 0;
   color: var(--blue);
@@ -301,27 +320,30 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-.forgotButton:hover { color: #0f55bd; }
-.forgotButton:focus-visible { outline: 3px solid rgba(23, 105, 224, .18); outline-offset: 3px; border-radius: 2px; }
+.forgotButton:hover { color: #ff566a; }
+.forgotButton:focus-visible { outline: 2px solid rgba(255, 30, 56, .5); outline-offset: 3px; border-radius: 2px; }
 
 .signInButton {
   width: 100%;
   min-height: 56px;
   margin-top: 26px;
-  border: 1px solid var(--ink);
-  border-radius: 5px;
+  border: 1px solid var(--blue);
+  border-radius: 2px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 9px;
   color: white;
-  background: var(--ink);
+  background: var(--blue);
   cursor: pointer;
-  font-size: 15px;
-  font-weight: 600;
+  font-family: "Chakra Petch", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
   transition: background 160ms ease, transform 160ms ease;
 }
-.signInButton:hover:not(:disabled) { background: #292b2f; }
+.signInButton:hover:not(:disabled) { background: #ff334b; box-shadow: 0 0 20px rgba(255, 30, 56, .3); }
 .signInButton:active:not(:disabled) { transform: translateY(1px); }
 .signInButton:disabled { cursor: wait; opacity: .88; }
 .buttonLoading svg { animation: spin 1s linear infinite; }
@@ -333,13 +355,13 @@
   align-items: flex-start;
   gap: 10px;
   border: 1px solid;
-  border-radius: 5px;
+  border-radius: 2px;
   font-size: 12px;
   line-height: 1.5;
 }
 .formAlert svg { flex: 0 0 auto; margin-top: 2px; }
-.errorAlert { color: #8c2825; border-color: #ebc8c5; background: #fff8f7; }
-.successAlert { color: #125d3e; border-color: #c6e3d6; background: #f5fbf8; }
+.errorAlert { color: #ff9aa7; border-color: rgba(255, 90, 109, .38); background: rgba(255, 90, 109, .07); }
+.successAlert { color: #8be0b8; border-color: rgba(66, 201, 139, .34); background: rgba(66, 201, 139, .07); }
 
 .signUpCopy {
   margin: 30px 0 0;
@@ -347,13 +369,14 @@
   color: var(--muted);
   font-size: 13px;
 }
-.signUpCopy a { color: var(--blue); font-weight: 600; }
+.signUpCopy a { color: var(--blue); font-weight: 700; }
 .formFooter {
   width: min(100%, 520px);
   margin: 44px auto 0;
   display: flex;
   justify-content: space-between;
   color: var(--quiet);
+  font-family: "JetBrains Mono", monospace;
   font-size: 10px;
 }
 .formFooter a { text-decoration: none; }
@@ -377,6 +400,8 @@
     height: 390px;
     padding: 24px 22px 18px;
     grid-template-rows: auto 1fr auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
   }
   .visualIntro { display: none; }
   .pcStage {

@@ -150,12 +150,12 @@
 .megaAccent { display: block; width: 8rem; height: 3px; margin-left: 1.5rem; background: var(--landing-accent); box-shadow: 0 0 12px var(--landing-accent); }
 .megaMenuGrid { display: grid; min-height: 24rem; padding: 1.75rem 1.5rem 2rem; grid-template-columns: repeat(6, 1fr); gap: 1.8rem; }
 .megaMenuGrid section { min-width: 0; }
-.categoryIcon { display: block; width: 4.5rem; height: 4rem; margin-bottom: 0.8rem; object-fit: contain; object-position: left center; filter: invert(0.85) sepia(1) hue-rotate(300deg) saturate(3); }
-.categoryIcon[src$="ps5-controller.png"] { filter: none; transform: scale(1.35); transform-origin: left center; }
+.categoryIcon { display: block; width: 4.5rem; height: 4rem; margin-bottom: 0.8rem; object-fit: contain; object-position: left center; filter: brightness(0) invert(1); }
+.categoryIcon[src$="ps5-controller.png"] { filter: brightness(0) invert(1); transform: scale(1.35); transform-origin: left center; }
 .megaMenuGrid h2 { margin: 0 0 0.6rem; color: #fff; font-family: "Teko", sans-serif; font-size: 1.15rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
 .megaMenuGrid ul { display: grid; margin: 0; padding: 0; gap: 0.1rem; list-style: none; }
-.megaMenuGrid li button { width: 100%; padding: 0.32rem 0; border: 0; color: #7f838f; background: transparent; font-size: 0.74rem; font-weight: 500; text-align: left; transition: all 120ms ease; }
-.megaMenuGrid li button:hover { color: var(--landing-accent); transform: translateX(3px); }
+.megaMenuGrid li button { width: 100%; padding: 0.32rem 0; border: 0; color: #fff; background: transparent; font-size: 0.74rem; font-weight: 500; text-align: left; transition: all 120ms ease; }
+.megaMenuGrid li button:hover { color: #fff; background: rgba(255, 255, 255, .04); transform: translateX(3px); }
 
 .dealsButton span {
   width: 0.42rem;

@@ -1,87 +1,109 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import type ScrollyVideoType from "scrolly-video/dist/ScrollyVideo.js";
 import styles from "./video-scroll.module.css";
 
 export function VideoScroll() {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const targetTimeRef = useRef<number>(0);
-  const rafRef = useRef<number | null>(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const videoContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const video = videoRef.current;
-    const container = containerRef.current;
-    if (!video || !container) return;
+    let scrollyVideo: ScrollyVideoType | null = null;
+    let scrollTrigger: ScrollTrigger | null = null;
+    let isMounted = true;
+    let lastProgress = -1;
 
-    let lastTargetTime = 0;
-    let ticking = false;
+    async function init() {
+      if (!videoContainerRef.current || !sectionRef.current) return;
 
-    const onScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          if (container && video && video.duration) {
-            const rect = container.getBoundingClientRect();
-            const windowHeight = window.innerHeight;
+      gsap.registerPlugin(ScrollTrigger);
 
-            const containerCenter = rect.top + rect.height / 2;
-            const viewportCenter = windowHeight / 2;
+      // Dynamically import ScrollyVideo for safe client-side execution
+      const ScrollyVideoModule = await import("scrolly-video/dist/ScrollyVideo.js");
+      const ScrollyVideo = ScrollyVideoModule.default;
 
-            const maxDistance = windowHeight * 0.75;
-            const distance = Math.abs(containerCenter - viewportCenter);
+      if (!isMounted || !videoContainerRef.current || !sectionRef.current) return;
 
-            const progress = 1 - Math.min(1, distance / maxDistance);
-            const targetTime = Math.pow(progress, 1.2) * video.duration;
+      // Clean container if any elements were appended
+      videoContainerRef.current.innerHTML = "";
 
-            // Only seek if distance moved is greater than 1 video frame
-            if (Math.abs(targetTime - lastTargetTime) > 0.033) {
-              lastTargetTime = targetTime;
-              if ("fastSeek" in video && typeof (video as unknown as { fastSeek: (t: number) => void }).fastSeek === "function") {
-                (video as unknown as { fastSeek: (t: number) => void }).fastSeek(targetTime);
-              } else {
-                video.currentTime = targetTime;
-              }
-            }
+      scrollyVideo = new ScrollyVideo({
+        scrollyVideoContainer: videoContainerRef.current,
+        src: "/videos/gpu-video.mp4",
+        trackScroll: false,
+        full: false,
+        sticky: false,
+        cover: false,
+        useWebCodecs: true,
+        transitionSpeed: 16,
+        frameThreshold: 0.01,
+        onReady: () => {
+          if (scrollTrigger && scrollyVideo) {
+            lastProgress = scrollTrigger.progress;
+            scrollyVideo.setVideoPercentage(scrollTrigger.progress, { jump: true });
           }
-          ticking = false;
-        });
-        ticking = true;
+          ScrollTrigger.refresh();
+        },
+      });
+
+      // Ensure video element plays nicely with autoplay/playsinline policies
+      if (scrollyVideo.video) {
+        scrollyVideo.video.muted = true;
+        scrollyVideo.video.playsInline = true;
+        scrollyVideo.video.setAttribute("playsinline", "");
+        scrollyVideo.video.setAttribute("muted", "");
+        scrollyVideo.video.addEventListener(
+          "loadedmetadata",
+          () => {
+            if (scrollTrigger && scrollyVideo) {
+              lastProgress = scrollTrigger.progress;
+              scrollyVideo.setVideoPercentage(scrollTrigger.progress, { jump: true });
+            }
+          },
+          { once: true }
+        );
       }
-    };
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
+      scrollTrigger = ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: "top 80%",
+        end: "bottom 20%",
+        scrub: 0.5,
+        onUpdate: (self) => {
+          if (scrollyVideo && Math.abs(self.progress - lastProgress) > 0.005) {
+            lastProgress = self.progress;
+            scrollyVideo.setVideoPercentage(self.progress, { jump: true });
+          }
+        },
+      });
+    }
 
-    const onLoadedMetadata = () => {
-      onScroll();
-    };
-    video.addEventListener("loadedmetadata", onLoadedMetadata);
-
-    onScroll();
+    init();
 
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      video.removeEventListener("loadedmetadata", onLoadedMetadata);
+      isMounted = false;
+      if (scrollTrigger) {
+        scrollTrigger.kill();
+      }
+      if (scrollyVideo && typeof scrollyVideo.destroy === "function") {
+        scrollyVideo.destroy();
+      }
     };
   }, []);
 
   return (
-    <div ref={containerRef} className={styles.container}>
+    <section
+      ref={sectionRef}
+      className={styles.section}
+      aria-label="Hardware Architecture Showcase"
+    >
+      <div className={styles.ambientGlow} aria-hidden="true" />
       <div className={styles.videoWrapper}>
-        <video
-          ref={videoRef}
-          className={styles.video}
-          src="/videos/gpu-video.mp4"
-          muted
-          playsInline
-          preload="auto"
-        >
-          <source src="/videos/gpu-video.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        <div ref={videoContainerRef} className={styles.videoTarget} />
       </div>
-    </div>
+    </section>
   );
 }

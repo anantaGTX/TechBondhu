@@ -1,33 +1,99 @@
-.container {
+.section {
+  position: relative;
   display: flex;
   width: 100%;
   max-width: 68rem;
-  margin: 1rem auto 6rem;
+  margin: 1.5rem auto 6rem;
   padding: 0 1.5rem;
   justify-content: center;
   align-items: center;
-  position: relative;
   z-index: 2;
   background: transparent;
+  contain: layout style;
+}
+
+.ambientGlow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85%;
+  height: 80%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 26, 53, 0.08) 0%,
+    rgba(0, 229, 255, 0.04) 45%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(48px);
 }
 
 .videoWrapper {
-  width: 100%;
   position: relative;
+  width: 100%;
+  max-width: 58rem;
+  aspect-ratio: 16 / 9;
   display: flex;
   justify-content: center;
   align-items: center;
   background: transparent;
   line-height: 0;
+  z-index: 1;
+  overflow: hidden;
+  contain: paint;
+  transform: translateZ(0);
+
+  /* CSS Gradient Mask - Fades outer edges seamlessly into website background */
+  mask-image: radial-gradient(
+    ellipse 85% 80% at 50% 50%,
+    #000000 65%,
+    rgba(0, 0, 0, 0.85) 80%,
+    rgba(0, 0, 0, 0.2) 94%,
+    transparent 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 85% 80% at 50% 50%,
+    #000000 65%,
+    rgba(0, 0, 0, 0.85) 80%,
+    rgba(0, 0, 0, 0.2) 94%,
+    transparent 100%
+  );
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+  mask-size: 100% 100%;
+  -webkit-mask-size: 100% 100%;
 }
 
-.video {
+.videoTarget {
+  position: relative;
   width: 100%;
-  max-width: 58rem;
-  height: auto;
-  display: block;
-  object-fit: contain;
+  height: 100%;
+}
+
+/* Position canvas and video absolutely on top of each other so they never split or sit side-by-side */
+.videoTarget :global(canvas),
+.videoTarget :global(video) {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
   pointer-events: none;
-  background: transparent;
-  filter: drop-shadow(0 1.5rem 3rem rgba(0, 0, 0, 0.15));
+  background: transparent !important;
+  filter: drop-shadow(0 1.5rem 3rem rgba(0, 0, 0, 0.35));
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Ensure that when ScrollyVideo sets display: none on video, it is strictly hidden */
+.videoTarget :global(video[style*="display: none"]),
+.videoTarget :global(video[style*="display:none"]),
+.videoTarget :global([style*="display: none"]),
+.videoTarget :global([style*="display:none"]) {
+  display: none !important;
 }

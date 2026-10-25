@@ -25,7 +25,7 @@ scripts/         Cross-project maintenance scripts
 
 ## Local setup
 
-1. Copy `.env.example` to `.env.local` and supply local Supabase values.
+1. Copy `.env.example` to `.env.local` and supply local Supabase values.Nafi
 2. Install web dependencies with `npm install`.
 3. Start the web application with `npm run dev:web`.
 4. Create a Python virtual environment inside `src/backend/.venv`.

@@ -252,11 +252,11 @@ export function FeaturedShowcase() {
           </div>
 
           <div className={styles.navActions}>
-            <button className={styles.builderButton} type="button">
+            <Link className={styles.builderButton} href="/pc-builder">
               <PcBuildIcon />
               <span>Build a PC</span>
               <span className={styles.builderArrow}><ForwardIcon /></span>
-            </button>
+            </Link>
             <button className={styles.utilityButton} type="button" aria-label="Search products">
               <SearchIcon />
             </button>

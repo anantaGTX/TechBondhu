@@ -59,3 +59,15 @@ def get_current_user(
 
 CurrentUser = Annotated[AuthenticatedUser, Depends(get_current_user)]
 
+
+def get_current_admin(user: CurrentUser) -> AuthenticatedUser:
+    if user.id not in settings.admin_user_ids:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Administrator access is required.",
+        )
+    return user
+
+
+CurrentAdmin = Annotated[AuthenticatedUser, Depends(get_current_admin)]
+

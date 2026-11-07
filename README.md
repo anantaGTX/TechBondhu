@@ -25,13 +25,9 @@ scripts/         Cross-project maintenance scripts
 
 ## Local setup
 
-<<<<<<< HEAD
-1. Copy `.env.example` to `.env.local` and supply local Supabase values.Nafi
-=======
 See **[`docs/TEAM_SETUP.md`](docs/TEAM_SETUP.md)** for the complete step-by-step team onboarding guide (database setup, `.env.local` templates, importing product/retailer data, and running the app).
 
 1. Copy `.env.example` to `.env.local` and supply local Supabase values.
->>>>>>> feature/pc-builder
 2. Install web dependencies with `npm install`.
 3. Start the web application with `npm run dev:web`.
 4. Create a Python virtual environment inside `src/backend/.venv`.

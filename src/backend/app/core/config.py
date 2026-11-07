@@ -28,6 +28,10 @@ class Settings(BaseSettings):
         default=None,
         validation_alias="SUPABASE_SERVICE_ROLE_KEY",
     )
+    admin_user_ids_raw: str = Field(
+        default="",
+        validation_alias="ADMIN_USER_IDS",
+    )
     better_auth_url: str = Field(
         default="http://localhost:3000",
         validation_alias="BETTER_AUTH_URL",
@@ -50,6 +54,14 @@ class Settings(BaseSettings):
         if self.better_auth_jwks_url_override:
             return self.better_auth_jwks_url_override
         return f"{self.better_auth_url.rstrip('/')}/api/auth/jwks"
+
+    @property
+    def admin_user_ids(self) -> set[str]:
+        return {
+            user_id.strip()
+            for user_id in self.admin_user_ids_raw.split(",")
+            if user_id.strip()
+        }
 
 
 @lru_cache
